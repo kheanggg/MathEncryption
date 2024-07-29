@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Encryption</title>
+    <link href="./styles/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>RSA Encryption/Decryption</h1>
+        <p class="description">RSA is a public-key cryptosystem used for secure data transmission. Enter the values for p, q, and e, along with the text to encrypt or decrypt.</p>
+        <form id="rsaForm">
+            <label for="p">Enter prime number p:</label>
+            <input autocomplete="off" type="number" id="p" name="p" required>
+            
+            <label for="q">Enter prime number q:</label>
+            <input autocomplete="off" type="number" id="q" name="q" required>
+            
+            <label for="e">Enter encryption key (e):</label>
+            <input autocomplete="off" type="number" id="e" name="e" required>
+            
+            <label for="message">Enter your message:</label>
+            <input autocomplete="off" type="text" id="message" name="message" required>
+            
+            <button type="submit" id="processButton">Encrypt</button>
+            <button type="button" id="resetButton">Reset</button>
+        </form>
+        <div id="result"></div>
+        <div class="toggle-container">
+            <span class="toggle-label">Mode:</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="modeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <script src="index2.js"></script>
+</body>
+</html>
