@@ -1,6 +1,6 @@
 // Wait for the document to be fully loaded
 $(document).ready(function() {
-    // Cache DOM elements for easier access
+    
     const form = $('#caesarForm');         // The form element
     const inputText = $('#plaintext');      // Input field for plaintext
     const shift = $('#shift');              // Input field for shift value
