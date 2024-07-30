@@ -141,7 +141,6 @@ input:checked + .slider:before {
 .toggle-label {
     margin-right: 10px;
 }
-
 .error-message {
     font-size: 16px; /* Match the description font size */
     color: red; /* Use a noticeable color for error messages */
