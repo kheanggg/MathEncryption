@@ -22,7 +22,7 @@ $(document).ready(function() {
         return 1n;
     }
 
-    // Function to perform RSA encryption (unchanged)
+    // Function to perform RSA encryption
     function rsaEncrypt(message, n, e) {
         return message.split('').map(function(char) {
             if (char.match(/[a-zA-Z]/)) {
@@ -36,7 +36,7 @@ $(document).ready(function() {
         }).join(' ');
     }
 
-    // Function to perform RSA decryption (unchanged)
+    // Function to perform RSA decryption
     function rsaDecrypt(message, n, d) {
         return message.split(' ').map(function(num) {
             if (num.match(/^\d+$/)) {
@@ -56,22 +56,28 @@ $(document).ready(function() {
 
     // UpdateUI function (unchanged)
     function updateUI(isEncrypting) {
-        // ... (keep existing implementation)
+        $('#encryptFields').toggle(isEncrypting);
+        $('#decryptFields').toggle(!isEncrypting);
+        $('#processButton').text(isEncrypting ? 'Encrypt' : 'Decrypt');
+        
+        // Hide all result elements initially
+        $('#result p').hide();
     }
 
     $('#rsaForm').on('submit', function(e) {
         e.preventDefault();
 
         var isEncrypting = !$('#modeToggle').prop('checked');
-        var message = $('#message').val();
+        var messageEncrypt = $('#messageEncrypt').val();
+        var messageDecrypt = $('#messageDecrypt').val();
         var n, e, d;
 
         $('#pError, #qError').text('');
 
         if (isEncrypting) {
-            var p = BigInt($('#p').val());
-            var q = BigInt($('#q').val());
-            e = BigInt($('#e').val());
+            var p = BigInt($('#pEncrypt').val());
+            var q = BigInt($('#qEncrypt').val());
+            e = BigInt($('#eEncrypt').val());
         
             let isPPrime = isPrime(Number(p));
             let isQPrime = isPrime(Number(q));
@@ -94,24 +100,42 @@ $(document).ready(function() {
             n = p * q;
             var phi = (p - 1n) * (q - 1n);
             d = modInverse(e, phi);
+
+            var result = rsaEncrypt(messageEncrypt, n, e);
         } else {
-            n = BigInt($('#p').val());
-            e = BigInt($('#e').val());
+            n = BigInt($('#nDecrypt').val());
+            d = BigInt($('#dDecrypt').val());
+            var result = rsaDecrypt(messageDecrypt, n, d);
         }
 
-        var result = isEncrypting ? rsaEncrypt(message, n, e) : rsaDecrypt(message, n, e);
+        $('#mode').text(isEncrypting ? 'Encryption' : 'Decryption').parent().show();
+        $('#originalMessage').text(isEncrypting ? messageEncrypt : messageDecrypt).parent().show();
+        $('#processedMessage').text(result).parent().show();
+        
+        if (isEncrypting) {
+            $('#publicKeyValue').text(`${n}, ${e}`);
+            $('#privateKeyValue').text(`${n}, ${d}`);
+            $('#publicKey, #privateKey').show();
+            $('#usedKey').hide();
+        } else {
+            $('#usedKeyValue').text(`${n}, ${d}`);
+            $('#usedKey').show();
+            $('#publicKey, #privateKey').hide();
+        }
 
-        $('#result').html(`
-            <p><strong>Original message:</strong> ${message}</p>
-            <p><strong>${isEncrypting ? 'Encrypted' : 'Decrypted'} message:</strong> ${result}</p>
-            <p><strong>Public Key (n, e):</strong> ${n}, ${e}</p>
-            ${isEncrypting ? `<p><strong>Private Key (n, d):</strong> ${n}, ${d}</p>` : ''}
-        `);
+        // Show common result elements
+        $('#result p:lt(3)').show();
+    });
+    
+    $('#processButton').on('click', function() {
+        $('#rsaForm').submit();
     });
 
-    // Reset button handler (unchanged)
+    // Reset button handler
     $('#resetButton').on('click', function() {
-        // ... (keep existing implementation)
+        $('#pEncrypt, #qEncrypt, #eEncrypt, #messageEncrypt, #nDecrypt, #dDecrypt, #messageDecrypt').val('');
+        $('#result').html('');
+        $('#pError, #qError').text('');
     });
 
     updateUI(true);
